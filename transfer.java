@@ -1,3 +1,3 @@
 public interface transfer {
-    public void transfer(String accName, Double amount, String bankName);
+    public void transfer(bank account, Double amount);
 }

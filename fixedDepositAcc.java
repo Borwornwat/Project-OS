@@ -1,41 +1,44 @@
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-public class fixedDepositAcc extends bank implements interest {
+public class fixedDepositAcc extends bank implements interest, transfer {
 
     private Integer time = null;
-    private LocalDateTime date = null;
+    private LocalDate date = null;
     private Double interestRate = null;
 
     public fixedDepositAcc(String accName, String accountID, Double balance,
                            String bankName, Double transferFee,
-                           Integer time, LocalDateTime date, Double interestRate) {
+                           Integer time, LocalDate date) {
 
         super(accName, accountID, balance, bankName, transferFee);
         this.time = time;
         this.date = date;
-        this.interestRate = interestRate;
     }
 
     // setters
     public void setTime(Integer time) { this.time = time; }
-    public void setDate(LocalDateTime date) { this.date = date; }
+    public void setDate(LocalDate date) { this.date = date; }
     public void setInterestRate(Double interestRate) { this.interestRate = interestRate; }
 
     // getters
     public Integer getTime() { return this.time; }
-    public LocalDateTime getDate() { return this.date; }
+    public LocalDate getDate() { return this.date; }
     public Double getInterestRate() { return this.interestRate; }
 
     // maturity check
     public boolean isMatured() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         return now.isAfter(date.plusMonths(time));
+    }
+
+    public void calculateRate(){
+        this.interestRate = Double.valueOf(this.time)/(12*100);
     }
 
     //  Method  follow interface
     @Override
-    public void getInterest(Double balance) {
-
+    public void getInterest() {
+        calculateRate();
         if (interestRate == null || time == null) {
             System.out.println("Interest cannot be calculated.");
             return;
@@ -46,7 +49,7 @@ public class fixedDepositAcc extends bank implements interest {
             return;
         }
 
-        Double interest = balance * interestRate * time;
+        Double interest = this.getBalance() * interestRate * time;
 
         System.out.println("Interest: " + interest);
     }
@@ -68,7 +71,8 @@ public class fixedDepositAcc extends bank implements interest {
         }
     }
 
-    public void transfer(String accName, Double amount, String bankName) {
+    @Override
+    public void transfer(bank target, Double amount) {
 
         if (amount <= 0) {
             System.out.println("Invalid amount.");
@@ -77,7 +81,7 @@ public class fixedDepositAcc extends bank implements interest {
 
         Double total = amount;
 
-        if (checkBank(bankName)) {
+        if (checkBank(target.getBankName())) {
             total += getTransferFee();
         }
 
@@ -88,7 +92,8 @@ public class fixedDepositAcc extends bank implements interest {
 
         cutInterest(amount);
         withdraw(total);
-
+        target.deposit(total);
+        transaction.addTransaction(this.getAccName(), amount, target.getAccName());
         System.out.println("Transfer completed.");
     }
 }

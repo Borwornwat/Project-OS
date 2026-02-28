@@ -4,11 +4,15 @@ public class transaction{
     private static ArrayList<String> transactionList = new ArrayList<>();
 
     //method
-    public void addTransaction(String accName, double amount, String bankName) {
-        transactionList.add(accName + " " + amount + " " + bankName); 
+    public static void addTransaction(String owner, double amount, String target) {
+        transactionList.add(owner + " transfer: " + amount + " Baht to " + target); 
     }
-    public ArrayList<String> getTransaction(){
-        return transactionList;
+    public static void showTransaction() {
+        System.out.println("Transaction History:");
+        for (String transaction : transactionList) {
+            System.out.println(transaction);
+            
+        }
     }
 
 

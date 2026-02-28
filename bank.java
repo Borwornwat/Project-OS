@@ -31,9 +31,11 @@ public class bank extends bankAccount {
     // method
     public boolean checkBank(String bankName) {
         // check if target account id the same bank or not
-        if (this.bankName.equals(bankName)) {
-            return false;
-        }
-        return true;
+        return this.bankName.equals(bankName);
+    }
+    public void showAccount(){
+        System.out.println("Account name: "+this.getAccName()+
+                        "\nAccount ID: "+this.getAccountID()+
+                        "\nBalance: "+this.getBalance());
     }
 }

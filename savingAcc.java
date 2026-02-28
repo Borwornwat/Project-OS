@@ -34,30 +34,31 @@ public class savingAcc extends bank implements interest,transfer{
 
     //method
     @Override
-    public void getInterest(Double balance) {
+    public void getInterest() {
         //calculate interest from balance using interest rate
-        double calculatedInterest = balance * interestRate;
+        double calculatedInterest = this.getBalance() * interestRate;
         System.out.println("Calculated Interest: " + calculatedInterest);
         deposit(calculatedInterest);
     }
 
     @Override
-    public void transfer(String accName, Double amount, String bankName){
+    public void transfer(bank target, Double amount){
         //transfer amount of money(amount) to other bank account(accName)
         //deduct balance if not the same bank
         //Can't done if balance become zero after transfer
         double totalAmount = amount;
 
         // checkBank returns true if the target bank is different
-        if (checkBank(bankName)) { 
+        if (checkBank(getBankName())) { 
             totalAmount += getTransferFee();
         }
         
         // Check if balance strictly remains greater than 0
         if (getBalance() - totalAmount > 0) {
             withdraw(totalAmount);
+            target.deposit(totalAmount - getTransferFee());
             // Logging the transaction
-            new transaction().addTransaction(accName, amount, bankName);
+            transaction.addTransaction(this.getAccName(), amount, target.getAccName());
             System.out.println("Transfer successful.");
         } else {
             System.out.println("Transfer failed. Balance cannot drop to zero or below.");
