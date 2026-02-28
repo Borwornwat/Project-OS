@@ -49,7 +49,7 @@ public class savingAcc extends bank implements interest,transfer{
         double totalAmount = amount;
 
         // checkBank returns true if the target bank is different
-        if (checkBank(getBankName())) { 
+        if (checkBank(target.getBankName())) { 
             totalAmount += getTransferFee();
         }
         
@@ -77,3 +77,4 @@ public class savingAcc extends bank implements interest,transfer{
     }
 
 }
+
